@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block navigationbar %}
+    <nav class="sidebar">
+        <h3>Content</h3>
+        <ul>
+          <li><a href="#sum">Summary / Mission</a></li>
+          <li><a href="#cit">Citation</a></li>
+          <li><a href="#tou">Terms of Use</a></li>
+          <li><a href="#con">Contact</a></li>
+          <li><a href="#ack">Acknowledgments</a></li>
+          <li><a href="#dis">Disclaimer</a></li>
+        </ul>
+    </nav>
+{% endblock %}
+    
+{% block title %}About{% endblock %}
+
+{% block content %}
+    
+    <a class="hidden-anchor" id="sum"></a>
+    <h2>Short summary and mission statement of PsychoModels</h2>
+    <p>PsychoModel’s mission is to expand and improve mathematical and computational modeling practices across psychological science. 
+    In particular, PsychoModels aims to ensure that included models are clearly annotated and presented in a similar way, making it easier to skim a model 
+    and grasp its content than currently existing repositories allow for.</p>
+    <p>Furthermore, it intends to facilitate the development of a common language around modelling; communication between researchers; model review efforts; 
+        reuse of the models in the database; and the improvement of modeling education in all areas of psychology.</p>
+
+    <a class="hidden-anchor" id="cit"></a>
+    <h2>A ‘how to cite PsychoModels’</h2>
+    <p>If you use models from PsychoModels in a publication, please credit the author(s) when referencing them. You can find authors' names, and in many cases their publications introducing the models, on the page for their contribution. If you are unsure how to cite a specific model, please ask us!</p>
+    <p>Please also include the standard citation for PsychoModels:</p>
+
+    <cite>van Dongen, N.N.N., & Volz, L. (2023). PsychoModels: The mathematical and computational model repository for psychological science. <a href="{% url 'models_index' %}">FINAL_URL</a> </cite>
+
+    <a class="hidden-anchor" id="tou"></a>
+    <h2>Terms of Use</h2>
+    <p>(like https://www.ebi.ac.uk/biomodels/termsofuse)</p>
+
+    <a class="hidden-anchor" id="con"></a>
+    <h2>How to contact us</h2>
+    <p>contact info</p>
+
+    <a class="hidden-anchor" id="ack"></a>
+    <h2>Acknowledgments</h2>
+    <p>acknowledge</p>
+
+    <a class="hidden-anchor" id="dis"></a>
+    <h2>Disclaimer</h2>
+    <p>The PsychoModels database is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the PsychoModels team be liable for any claim, damages or other liability whatsoever, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the database or the use or other dealings in the database.</p>
+{% endblock %}

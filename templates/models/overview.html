@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<p>Explore the models</p>
+
+<form method="GET" action="{% url 'models_overview' %}">
+    {{ search_form.as_ul }}
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h2>Models</h2>
+
+<table>
+    <tr>
+        <th>Model name</th>
+        <th>Authors</th>
+        <th>Language</th>
+        <th>Framework</th>
+        <th>Variables</th>
+    </tr>
+    {% for object in object_list %}
+    <tr>
+        <td><a href="{{ object.id }}/">{{ object.model_name }}</a></td>
+        <td>{{ object.publication.model_authors.first }} {% if object.publication.model_authors.count > 1 %}et al.{% endif %}</td>
+        <td>{{ object.language }}</td>
+        <td>{% for framework in object.framework.all %} {{framework}}; {% endfor%}</td>
+        <td>{% for var in object.modelvariables.all %} {{var}}; {% endfor %}</td>
+    {% empty %}
+        <td>No models fit your search criteria.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+    {% block site %}
+    <div class="main-header">
+        <div class="center">
+            <h1><b>Psycho</b><i>Models</i></h1>
+            <p> The  model repository for psychological science </p>
+            <ul>
+                <li><a href="{% url 'models_overview' %}">Models</a></li>
+                <li><a href="{% url 'models_about' %}">Resources</a></li>
+                <li><a href="{% url 'models_tutorial' %}">Tutorial</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        {% block title %}What is PsychoModels?{% endblock %}
+        {% block content %}
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro voluptatum fugiat officia voluptates accusantium adipisci eum maxime ea. Laboriosam, sit! Expedita, ipsum non quibusdam voluptates ipsam reiciendis architecto cupiditate excepturi.</p>
+
+        {% endblock %}
+    </div>
+    
+    {% endblock %}
