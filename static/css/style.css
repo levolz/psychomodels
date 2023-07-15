@@ -159,7 +159,7 @@ font-weight: bold;}
   display: flex;
   overflow: hidden;
   background-color: linear-gradient(rgba(255,255,255,.4) 0%, rgba(165,165,165,.4) 82%, rgba(115,115,115,.6) 100%); 
-  background-image: url("background.png");
+  background-image: url("../img/background.png");
   background-size: cover;
   background-attachment: fixed;
   height: calc(100% - 60px);
@@ -171,7 +171,7 @@ font-weight: bold;}
 .center{
   margin: auto;
   padding: 70px;
-  background-image: url("PsychoModels_logo.svg");
+  background-image: url("../img/pm_logo.svg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -8,8 +8,8 @@ from hashlib import sha256
 class Author(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    email = models.EmailField(max_length=254)
-    institution = models.CharField(max_length=200, null=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+    institution = models.CharField(max_length=200, null=True, blank=True)
     # phone = models.CharField(max_length=200)
     # address = models.CharField(max_length=200)
     # city = models.CharField(max_length=200)
@@ -18,7 +18,9 @@ class Author(models.Model):
     # country = models.CharField(max_length=200)
     # role = models.CharField(max_length=200)
 
-    user = models.OneToOneField("auth.User", on_delete=models.SET_NULL, null=True)
+    user = models.OneToOneField(
+        "auth.User", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -30,10 +32,10 @@ class Publication(models.Model):
     model_authors = models.ManyToManyField(Author)
 
     year = models.IntegerField(null=True)
-    outlet = models.CharField(max_length=200, null=True)
-    volume = models.IntegerField(null=True)
-    issue = models.IntegerField(null=True)
-    pages = models.CharField(max_length=200, null=True)
+    outlet = models.CharField(max_length=200, null=True, blank=True)
+    volume = models.IntegerField(null=True, blank=True)
+    issue = models.IntegerField(null=True, blank=True)
+    pages = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         auths = self.model_authors.all()
@@ -62,8 +64,10 @@ class Language(models.Model):
 
 class Framework(models.Model):
     framework_name = models.CharField(max_length=200)
-    framework_description = models.CharField(max_length=1500)
-    parent_framework = models.ForeignKey("self", on_delete=models.DO_NOTHING, null=True)
+    framework_description = models.CharField(max_length=1500, null=True, blank=True)
+    parent_framework = models.ForeignKey(
+        "self", on_delete=models.DO_NOTHING, null=True, blank=True
+    )
 
     def __str__(self):
         return self.framework_name
@@ -140,7 +144,7 @@ class Psychmodel(models.Model):
     framework = models.ManyToManyField(Framework)
     # software_package = models.ManyToManyField(Softwarepackage)
 
-    codeURL = models.URLField(max_length=254, null=True)
+    codeURL = models.URLField(max_length=254, null=True, blank=True)
     dataURL = models.URLField(max_length=254, null=True, blank=True)
 
     # model_file = models.FileField(upload_to="models/")
