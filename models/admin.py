@@ -8,8 +8,8 @@ class PublicationAdmin(admin.ModelAdmin):
     filter_horizontal = ["model_authors"]
 
 
-class FrameworkAdmin(admin.ModelAdmin):
-    filter_horizontal = ["frameworks"]
+class PsychmodelAdmin(admin.ModelAdmin):
+    filter_horizontal = ["framework"]
 
 
 admin.site.register(models.Author)
