@@ -13,7 +13,7 @@
 
 
 <h4>Publication:</h4>
-<cite>{{object.publication}}</cite>
+<cite>{{object.publication}}<a href="{{object.publication.unique_identifier}}">{{object.publication.unique_identifier}}</a></cite>
 
 <h4>Modelling Framework:</h4>
 <p>{% for framework in object.framework.all %} 
