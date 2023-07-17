@@ -64,7 +64,7 @@ class Language(models.Model):
 
 class Framework(models.Model):
     framework_name = models.CharField(max_length=200)
-    framework_description = models.CharField(max_length=1500, null=True, blank=True)
+    framework_description = models.TextField(max_length=1500, null=True, blank=True)
     parent_framework = models.ForeignKey(
         "self", on_delete=models.DO_NOTHING, null=True, blank=True
     )
@@ -75,7 +75,7 @@ class Framework(models.Model):
 
 class Softwarepackage(models.Model):
     package_name = models.CharField(max_length=200)
-    package_description = models.CharField(max_length=1500)
+    package_description = models.TextField(max_length=1500)
     package_documentation = models.URLField(max_length=254)
     language = models.ForeignKey("Language", on_delete=models.DO_NOTHING)
 
@@ -92,7 +92,7 @@ class Psychfield(models.Model):
 
 class Parameter(models.Model):
     parameter_name = models.CharField(max_length=200)
-    parameter_description = models.CharField(max_length=1500)
+    parameter_description = models.TextField(max_length=1500)
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -101,7 +101,7 @@ class Parameter(models.Model):
 
 class Variable(models.Model):
     variable_name = models.CharField(max_length=200)
-    variable_description = models.CharField(max_length=200)
+    variable_description = models.TextField(max_length=200)
 
     def __str__(self):
         return self.variable_name
@@ -109,7 +109,7 @@ class Variable(models.Model):
 
 class Measurementinstrument(models.Model):
     instrument_name = models.CharField(max_length=200)
-    instrument_description = models.CharField(max_length=200, null=True)
+    instrument_description = models.TextField(max_length=200, null=True)
     instrument_publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     additional_details = models.CharField(max_length=200, null=True, blank=True)
 
@@ -119,12 +119,15 @@ class Measurementinstrument(models.Model):
 
 class Psychmodel(models.Model):
     submitting_user = models.ForeignKey(
-        "auth.User", on_delete=models.CASCADE, null=True, related_name="submitting_user"
+        "auth.User",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="submitting_user",
     )
     # co_authors = models.ManyToManyField("auth.User", related_name="co_authors")
     reviewer = models.ForeignKey(
         "auth.User",
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         related_name="reviewer",
         editable=False,
@@ -136,8 +139,8 @@ class Psychmodel(models.Model):
     publication = models.OneToOneField(Publication, on_delete=models.CASCADE)
 
     model_name = models.CharField(max_length=200, unique=True)
-    description = models.CharField(max_length=3000)
-    how_does_it_work = models.CharField(max_length=3000, null=True, blank=True)
+    description = models.TextField(max_length=3000)
+    how_does_it_work = models.TextField(max_length=3000, null=True, blank=True)
     # how_to_use_it = models.CharField(max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
     language = models.ForeignKey("language", on_delete=models.DO_NOTHING)
@@ -184,7 +187,7 @@ class Modelparameter(models.Model):
     # parameterId = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     # parameter_unit = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True)
-    details = models.CharField(max_length=200, null=True, blank=True)
+    details = models.TextField(max_length=1500, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -201,7 +204,7 @@ class Modelvariable(models.Model):
     measurementinstrument = models.ForeignKey(
         Measurementinstrument, on_delete=models.DO_NOTHING, null=True, blank=True
     )
-    details = models.CharField(max_length=200, null=True, blank=True)
+    details = models.TextField(max_length=1500, null=True, blank=True)
 
     def __str__(self):
         return self.name

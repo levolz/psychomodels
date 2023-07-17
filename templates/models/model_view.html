@@ -16,7 +16,9 @@
 <cite>{{object.publication}}</cite>
 
 <h4>Modelling Framework:</h4>
-<p>{% for framework in object.framework.all %} {{framework}} | {% endfor %} </p>
+<p>{% for framework in object.framework.all %} 
+        {{framework}}{% if not forloop.last %}; {% endif %} 
+    {% endfor %} </p>
 
 <h4>Language:</h4>
 <p>{{ object.language.language_name }}</p>

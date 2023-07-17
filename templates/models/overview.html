@@ -29,8 +29,12 @@
         <td><a href="{{ object.id }}/">{{ object.model_name }}</a></td>
         <td>{{ object.publication.model_authors.first }} {% if object.publication.model_authors.count > 1 %}et al.{% endif %}</td>
         <td>{{ object.language }}</td>
-        <td>{% for framework in object.framework.all %} {{framework}}; {% endfor%}</td>
-        <td>{% for var in object.modelvariables.all %} {{var}}; {% endfor %}</td>
+        <td>{% for framework in object.framework.all %} 
+                {{framework}}{% if not forloop.last %}; {% endif %} 
+            {% endfor%}</td>
+        <td>{% for var in object.modelvariables.all %} 
+                {{var}}{% if not forloop.last %}; {% endif %} 
+            {% endfor %}</td>
     {% empty %}
         <td>No models fit your search criteria.</td>
     </tr>
