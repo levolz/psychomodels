@@ -13,7 +13,7 @@ class PsychmodelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Author)
-admin.site.register(models.Psychmodel)
+admin.site.register(models.Psychmodel, PsychmodelAdmin)
 # admin.site.register(models.Parameter)
 admin.site.register(models.Modelparameter)
 # admin.site.register(models.Variable)
