@@ -32,9 +32,18 @@
         <td>{% for framework in object.framework.all %} 
                 {{framework}}{% if not forloop.last %}; {% endif %} 
             {% endfor%}</td>
-        <td>{% for var in object.modelvariables.all %} 
-                {{var}}{% if not forloop.last %}; {% endif %} 
-            {% endfor %}</td>
+        <td> 
+            {% if object.modelvariables.all|length < 6 %}
+                {% for var in object.modelvariables.all %} 
+                    {{var}}{% if not forloop.last %}; {% endif %} 
+                {% endfor %}
+            {% else %}
+                {% for var in object.modelvariables.all|slice:":5" %}
+                    {{var}};
+                {% endfor %}
+                ...
+            {% endif %}
+        </td>
     {% empty %}
         <td>No models fit your search criteria.</td>
     </tr>
