@@ -125,7 +125,7 @@ def submit_anon(request):
         if form.is_valid():
             # model = form.save()
             messages.success(request, "Model submission successful.")
-            return redirect("index")
+            return redirect("models_index")
         messages.error(request, "Unsuccessful submission. Invalid information.")
     form = SubmitModelForm()
     context = {"model_form": form}
@@ -154,7 +154,7 @@ def register_request(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return redirect("index")
+            return redirect("models_index")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
     context = {"form": form}
