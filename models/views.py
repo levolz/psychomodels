@@ -38,7 +38,7 @@ class IndexView(generic.ListView):
                     author_query = Author.objects.filter(
                         first_name__icontains=author
                     ) | Author.objects.filter(last_name__icontains=author)
-                    query &= Q(publication__model_authors__in=author_query)
+                    query &= Q(publication__authors__in=author_query)
                 if framework:
                     framework_query = Framework.objects.filter(
                         framework_name__icontains=framework
