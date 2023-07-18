@@ -7,7 +7,7 @@
 <p>{{object.description}}</p>
 <hr>
 <h4>Author(s)</h4>
-{% for author in object.publication.model_authors.all %}
+{% for author in object.publication.authors.all %}
 {{author}},
 {% endfor %}
 

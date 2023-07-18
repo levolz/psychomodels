@@ -27,7 +27,7 @@
     {% for object in object_list %}
     <tr>
         <td><a href="{{ object.id }}/">{{ object.model_name }}</a></td>
-        <td>{{ object.publication.model_authors.first }} {% if object.publication.model_authors.count > 1 %}et al.{% endif %}</td>
+        <td>{{ object.publication.authors.first }} {% if object.publication.authors.count > 1 %}et al.{% endif %}</td>
         <td>{{ object.language }}</td>
         <td>{% for framework in object.framework.all %} 
                 {{framework}}{% if not forloop.last %}; {% endif %} 

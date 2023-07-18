@@ -5,7 +5,7 @@ from . import models
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    filter_horizontal = ["model_authors"]
+    filter_horizontal = ["authors"]
 
 
 class PsychmodelAdmin(admin.ModelAdmin):

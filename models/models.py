@@ -29,7 +29,7 @@ class Author(models.Model):
 class Publication(models.Model):
     unique_identifier = models.URLField(max_length=254, unique=True)
     title = models.CharField(max_length=200)
-    model_authors = models.ManyToManyField(Author)
+    authors = models.ManyToManyField(Author)
 
     year = models.IntegerField(null=True)
     outlet = models.CharField(max_length=200, null=True, blank=True)
