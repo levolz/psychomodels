@@ -38,7 +38,7 @@ class Publication(models.Model):
     pages = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        auths = self.model_authors.all()
+        auths = self.authors.all()
         aut = f"{auths[0].last_name}, {auths[0].first_name[0]}"
         if len(auths) > 1:
             aut += f", et al"
