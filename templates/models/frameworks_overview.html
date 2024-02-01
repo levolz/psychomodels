@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Frameworks{% endblock %}
+
+{% block content %}
+<p>Explore the various frameworks</p>
+
+{% comment %}
+
+<form method="GET" action="{% url 'models_overview' %}">
+    {{ search_form.as_ul }}
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+{% endcomment %}
+
+<h2>Frameworks</h2>
+
+<table>
+    <tr>
+        <th>Framework</th>
+    </tr>
+    {% for object in object_list %}
+    <tr>
+        <td><a href="{{ object.id }}/">{{ object.framework_name }}</a></td>
+
+    {% empty %}
+        <td>No models fit your search criteria.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

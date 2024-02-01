@@ -20,8 +20,19 @@
         {{framework}}{% if not forloop.last %}; {% endif %} 
     {% endfor %} </p>
 
-<h4>Language:</h4>
-<p>{{ object.language.language_name }}</p>
+<div class="wrapper">
+    <div id="textblock">
+    <h4>Language:</h4>
+    <p>{{ object.language.language_name }}</p>
+    </div>
+    <div id="textblock">
+    <h4>Software:</h4>
+    {% for p in object.softwarepackage.all %}
+    <p>{{ p.name }}</p>
+    {% endfor %}
+    </div>
+</div>
+
 
 <h4>Model parameters:</h4>
 {% if object.modelparameters.all %}
@@ -90,5 +101,6 @@
 </div>
 {% endif %}
 
+<a href="{% url 'edit_model' pk=object.id %}"><button class="btn">Edit</button></a> 
 
 {% endblock %}

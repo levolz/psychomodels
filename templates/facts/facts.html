@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navigationbar %}
+<nav class="navbar nav-facts">
+    <div class="navbar-icon">
+        <a href="{% url 'facts_index' %}"><img src="{% static '/img/pm_logo_white.svg' %}" alt="Icon"></a>
+    </div>
+    <h3><a href="{% url 'facts_index' %}"><b>Psycho</b><em>Facts</em></a></h3>
+    <ul>
+        <li><a>About</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block site %}
+<div class="main-header">
+    <div class="center">
+        <h1><b>Psycho</b><i>Facts</i></h1>
+        <p> All of Psychological Phenomena </p>
+        <ul>
+            <li><a>Facts</a></li>
+            <li><a>Resources</a></li>
+            <li><a>Tutorial</a></li>
+        </ul>
+    </div>
+</div>
+<div class="container">
+    {% block title %}What is PsychoFacts?{% endblock %}
+    {% block content %}
+    <p>
+        Lorem ipsum. 
+    </p>
+    <p>
+        More random text.
+    </p>
+    {% endblock %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>&copy; 2023 <a href="{% url 'facts_index' %}">PsychoFacts</a>. All rights reserved.</p>
+</footer>
+{% endblock %}

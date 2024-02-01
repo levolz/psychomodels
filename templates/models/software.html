@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{object.name}}{% endblock %}
+
+{% block content %} 
+<h1>{{object.package_name}}</h1>
+<p>{{object.package_description}}</p>
+
+<hr>
+
+<h4>Programming Language</h4>
+<p>{{object.language}}</p>
+
+<a href="{{ object.package_documentation }}">    
+    <div id="externalrepo">
+    Documentation
+    </div>
+</a>
+
+{% endblock %}

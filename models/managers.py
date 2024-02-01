@@ -7,20 +7,21 @@ class PsychmodelManager(models.Manager):
         title,
         description,
         publication,
-        authors,
-        frameworks,
-        softwarepackages,
-        languages,
-        model_file,
+        # authors,
+        # frameworks,
+        # softwarepackages,
+        # languages,
+        # model_file,
     ):
         model = self.create(
             title=title,
             description=description,
             publication=publication,
-            model_file=model_file,
+            # =model_file,
         )
-        for author in authors:
-            model.author_set.add(author)
 
-        for framework in frameworks:
-            model.framework_set.add(framework)
+        # for author in authors:
+        #    model.author_set.add(author)
+
+        # for framework in frameworks:
+        #    model.framework_set.add(framework)
