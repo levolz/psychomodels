@@ -20,13 +20,13 @@ from .models import (
     Softwarepackage,
 )
 from .managers import PsychmodelManager
-from .filters import PsychmodelSearch, PsychmodelFilter
+from .filters import PsychmodelSearch, PsychmodelFilter, FrameworkSearch
 from .forms import PsychmodelForm
 
 
 class IndexView(generic.ListView):
     queryset = Psychmodel.objects.filter(reviewed=True)
-    template_name = "models/overview.html"
+    template_name = "models/model_overview.html"
     context_object_name = "models_list"
 
     def get_queryset(self, *args, **kwargs):
@@ -57,12 +57,35 @@ class ModelView(generic.DetailView):
         return super().get_context_data(**kwargs)
 
 
+def edit_model(request, pk):
+    template = loader.get_template("models/model_edit.html")
+    model = get_object_or_404(Psychmodel, pk=pk)
+    form = PsychmodelForm(instance=model)
+    if request.method == "POST":
+        form = PsychmodelForm(request.POST, instance=model)
+        if form.is_valid():
+            model = form.save()
+            messages.success(request, "Model successfuly changed.")
+        else:
+            messages.error(request, "Unsuccessful submission. Invalid information.")
+    context = {"form": form}
+    return HttpResponse(template.render(context, request))
+
+
 class Frameworks(generic.ListView):
+    queryset = Framework.objects.all()
     template_name = "models/frameworks_overview.html"
     context_object_name = "frameworks_list"
 
-    def get_queryset(self):
-        return Framework.objects.all()
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        self.filterset = FrameworkSearch(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = self.filterset.form
+        return context
 
 
 class FrameworkView(generic.DetailView):
@@ -169,20 +192,5 @@ def login_request(request):
         else:
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
-    context = {"form": form}
-    return HttpResponse(template.render(context, request))
-
-
-def edit_model(request, pk):
-    template = loader.get_template("models/edit_model.html")
-    model = get_object_or_404(Psychmodel, pk=pk)
-    form = PsychmodelForm(instance=model)
-    if request.method == "POST":
-        form = PsychmodelForm(request.POST, instance=model)
-        if form.is_valid():
-            model = form.save()
-            messages.success(request, "Model successfuly changed.")
-        else:
-            messages.error(request, "Unsuccessful submission. Invalid information.")
     context = {"form": form}
     return HttpResponse(template.render(context, request))

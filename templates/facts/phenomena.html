@@ -1,0 +1,22 @@
+{% extends 'facts.html' %}
+{% load static %}
+
+{% block title %}Phenomena{% endblock %}
+ 
+{% block content %}
+
+<p>Explore the various phenomena</p>
+<table>
+    {% for object in phenomena_list %}
+    <tr>
+        <td><a href="{{ object.id }}/">{{ object.name }}</a></td>
+        <td>{{ object.short }}</td>
+
+    {% empty %}
+        <td>No models fit your search criteria.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

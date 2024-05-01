@@ -18,8 +18,6 @@ class PsychmodelAdmin(admin.ModelAdmin):
 admin.site.register(models.Author)
 admin.site.register(models.Psychmodel, PsychmodelAdmin)
 admin.site.register(models.Proposal)
-admin.site.register(models.Parameter)
-admin.site.register(models.Modelparameter)
 admin.site.register(models.Variable)
 admin.site.register(models.Modelvariable)
 admin.site.register(models.Language)

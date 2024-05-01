@@ -3,7 +3,7 @@ from django.db.models import Q
 
 from django import forms
 
-from .models import Psychmodel
+from .models import Psychmodel, Framework
 
 
 class PsychmodelSearch(django_filters.FilterSet):
@@ -53,3 +53,15 @@ class PsychmodelFilter(django_filters.FilterSet):
     class Meta:
         model = Psychmodel
         fields = ["framework", "language", "psychfield"]
+
+
+class FrameworkSearch(django_filters.FilterSet):
+    name = django_filters.CharFilter(
+        field_name="framework_name",
+        lookup_expr="icontains",
+        label="Framework",
+    )
+
+    class Meta:
+        model = Framework
+        fields = ["name"]

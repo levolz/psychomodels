@@ -210,6 +210,7 @@ font-weight: bold;}
   background-color: linear-gradient(rgba(255,255,255,.4) 0%, rgba(165,165,165,.4) 82%, rgba(115,115,115,.6) 100%); 
   background-image: url("../img/background.png");
   background-size: cover;
+  background-position: center;
   background-attachment: fixed;
   height: calc(100% - 60px);
   position: relative;

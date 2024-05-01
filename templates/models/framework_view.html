@@ -28,7 +28,11 @@
 <p>No child frameworks</p>
 {% endif %}
 
+{% if object.explanation %}
+<hr>
+<h2>Explanation</h2>
 <p>{{ object.formatted_explanation|safe }} </p>
+{% endif %}
 
 
 {% endblock %}

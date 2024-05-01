@@ -1,20 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'facts.html' %}
 {% load static %}
-
-{% block navigationbar %}
-<nav class="navbar nav-facts">
-    <div class="navbar-icon">
-        <a href="{% url 'facts_index' %}"><img src="{% static '/img/pm_logo_white.svg' %}" alt="Icon"></a>
-    </div>
-    <h3><a href="{% url 'facts_index' %}"><b>Psycho</b><em>Facts</em></a></h3>
-    <ul>
-        <li><a href="{% url 'facts_index' %}">About</a></li>
-        <li><a>Search</a></li>
-        <li><a>PhenoMenu</a></li>
-        <li><a>Contact</a></li>
-    </ul>
-</nav>
-{% endblock %}
 
 {% block site %}
 <div class="main-header">
@@ -22,9 +7,9 @@
         <h1><b>Psycho</b><i>Facts</i></h1>
         <p> The Psychological Phenomena We Encounter</p>
         <ul>
-            <li><a>Facts</a></li>
-            <li><a>Resources</a></li>
-            <li><a>Tutorial</a></li>
+            <li><a href="{% url 'phenomena' %}">Phenomena</a></li>
+            <li><a href="{% url 'constructs' %}">Constructs</a></li>
+            <li><a href="{% url 'patterns' %}">Patterns</a></li>
         </ul>
     </div>
 </div>
