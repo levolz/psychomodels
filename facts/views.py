@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.views import generic
 
 from .models import Phenomenon, Construct, Pattern
+from .filters import PhenomenonSearch, PhenomenonFilter
 
 
 def index(request):
@@ -21,7 +22,20 @@ class PhenomenaView(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
+
+        self.searchset = PhenomenonSearch(self.request.GET, queryset=queryset)
+        queryset = self.searchset.qs
+
+        self.filterset = PhenomenonFilter(self.request.GET, queryset=queryset)
+        queryset = self.filterset.qs
+
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = self.searchset.form
+        context["filter_form"] = self.filterset.form
+        return context
 
 
 class PhenomenonView(generic.DetailView):
