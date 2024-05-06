@@ -149,8 +149,8 @@ class Psychmodel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     language = models.ForeignKey("language", on_delete=models.DO_NOTHING)
     framework = models.ManyToManyField(Framework)
-    softwarepackage = models.ManyToManyField(Softwarepackage)
-    psychfield = models.ManyToManyField(Psychfield)
+    softwarepackage = models.ManyToManyField(Softwarepackage, blank=True)
+    psychfield = models.ManyToManyField(Psychfield, blank=True)
 
     codeURL = models.URLField(max_length=254, null=True, blank=True)
     dataURL = models.URLField(max_length=254, null=True, blank=True)
