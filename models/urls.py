@@ -14,4 +14,5 @@ urlpatterns = [
     # path("login", views.login_request, name="login"),
     # path("logout", views.logout_request, name="logout"),
     path("submit_anon/", views.submit_anon, name="submit_anon"),
+    path("download", views.download, name="download"),
 ]

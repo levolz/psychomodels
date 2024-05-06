@@ -9,6 +9,10 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 
+from django.views.static import serve
+from psychomodels.settings import MEDIA_ROOT
+import os
+
 from .forms import NewUserForm, SubmitModelForm, ContactForm, SearchForm
 from .models import Psychmodel, Author, Framework, Language, Modelvariable
 from .managers import PsychmodelManager
@@ -180,3 +184,10 @@ def login_request(request):
     form = AuthenticationForm()
     context = {"form": form}
     return HttpResponse(template.render(context, request))
+
+
+def download(request):
+    # check if file exists, then send it
+    if "data.json" in os.listdir(MEDIA_ROOT):
+        return serve(request, "data.json", MEDIA_ROOT)
+    return HttpResponse("File not found.")
