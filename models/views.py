@@ -19,6 +19,7 @@ from .models import (
     Modelvariable,
     Softwarepackage,
 )
+
 from .managers import PsychmodelManager
 from .filters import PsychmodelSearch, PsychmodelFilter, FrameworkSearch
 from .forms import PsychmodelForm
@@ -194,3 +195,10 @@ def login_request(request):
     form = AuthenticationForm()
     context = {"form": form}
     return HttpResponse(template.render(context, request))
+
+
+def download(request):
+    # check if file exists, then send it
+    if "data.json" in os.listdir(MEDIA_ROOT):
+        return serve(request, "data.json", MEDIA_ROOT)
+    return HttpResponse("File not found.")
