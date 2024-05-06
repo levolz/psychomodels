@@ -12,7 +12,22 @@ class PublicationAdmin(admin.ModelAdmin):
 
 
 class PsychmodelAdmin(admin.ModelAdmin):
+    list_display = ["model_name", "reviewed"]
     filter_horizontal = ["framework"]
+
+    actions = ["mark_as_reviewed", "mark_as_unreviewed"]
+
+    @admin.action(description="Mark selected models as reviewed")
+    def mark_as_reviewed(self, request, queryset):
+        queryset.update(reviewed=True)
+        self.message_user(request, "The selected models have been marked as reviewed.")
+
+    @admin.action(description="Mark selected models as unreviewed")
+    def mark_as_unreviewed(self, request, queryset):
+        queryset.update(reviewed=False)
+        self.message_user(
+            request, "The selected models have been marked as unreviewed."
+        )
 
 
 admin.site.register(models.Author)
