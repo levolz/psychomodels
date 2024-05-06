@@ -4,6 +4,9 @@ from django.utils.text import slugify
 
 from hashlib import sha256
 
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=200)
@@ -68,19 +71,28 @@ class Framework(models.Model):
     parent_framework = models.ForeignKey(
         "self", on_delete=models.DO_NOTHING, null=True, blank=True
     )
+    publication = models.ForeignKey(
+        Publication, on_delete=models.DO_NOTHING, null=True, blank=True
+    )
+
+    explanation = MarkdownxField(null=True, blank=True)
+
+    @property
+    def formatted_explanation(self):
+        return markdownify(self.explanation)
 
     def __str__(self):
         return self.framework_name
 
 
 class Softwarepackage(models.Model):
-    package_name = models.CharField(max_length=200)
-    package_description = models.TextField(max_length=1500)
-    package_documentation = models.URLField(max_length=254)
+    name = models.CharField(max_length=200)
+    description = models.TextField(max_length=1500, null=True, blank=True)
+    documentation = models.URLField(max_length=254, null=True, blank=True)
     language = models.ForeignKey("Language", on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return self.package_name
+        return self.name
 
 
 class Psychfield(models.Model):
@@ -88,15 +100,6 @@ class Psychfield(models.Model):
 
     def __str__(self):
         return self.discipline_name
-
-
-class Parameter(models.Model):
-    parameter_name = models.CharField(max_length=200)
-    parameter_description = models.TextField(max_length=1500)
-    framework = models.ForeignKey(Framework, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return self.parameter_name
 
 
 class Variable(models.Model):
@@ -112,6 +115,7 @@ class Measurementinstrument(models.Model):
     instrument_description = models.TextField(max_length=200, null=True)
     instrument_publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     additional_details = models.CharField(max_length=200, null=True, blank=True)
+    variables = models.ManyToManyField(Variable, blank=True)
 
     def __str__(self):
         return self.instrument_name
@@ -140,20 +144,21 @@ class Psychmodel(models.Model):
 
     model_name = models.CharField(max_length=200, unique=True)
     description = models.TextField(max_length=3000)
-    how_does_it_work = models.TextField(max_length=3000, null=True, blank=True)
+    explanation = MarkdownxField(null=True, blank=True)
     # how_to_use_it = models.CharField(max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
     language = models.ForeignKey("language", on_delete=models.DO_NOTHING)
     framework = models.ManyToManyField(Framework)
-    # software_package = models.ManyToManyField(Softwarepackage)
+    softwarepackage = models.ManyToManyField(Softwarepackage)
+    psychfield = models.ManyToManyField(Psychfield)
 
     codeURL = models.URLField(max_length=254, null=True, blank=True)
     dataURL = models.URLField(max_length=254, null=True, blank=True)
 
     # model_file = models.FileField(upload_to="models/")
-    # model_parameters = models.ManyToManyField(Parameter, through="ModelParameter")
-    # model_variables = models.ManyToManyField(Variable, through="ModelVariable")
-    # model_disciplines = models.ManyToManyField("psych_field", through="link_model_discipline")
+    model_variables = models.ManyToManyField(
+        Variable, through="ModelVariable", blank=True
+    )
 
     def __str__(self):
         return self.model_name
@@ -172,32 +177,28 @@ class Psychmodel(models.Model):
     def get_absolute_url(self):
         return reverse("model_view", kwargs={"slug": self.slug})
 
+    @property
+    def formatted_explanation(self):
+        return markdownify(self.explanation)
 
-class Proposedmodel(Psychmodel):
-    pass
+
+class Proposal(models.Model):
+    title = models.CharField(max_length=200, default="New Model")
+    description = models.TextField(max_length=3000, null=True, blank=True)
+    publication = models.CharField(max_length=200, null=True, blank=True)
 
     # def save_to_model(self, *args, **kwargs):
     #     super(PsychModel, self).save(*args, **kwargs)
 
-
-class Modelparameter(models.Model):
-    modelId = models.ForeignKey(
-        Psychmodel, on_delete=models.CASCADE, related_name="modelparameters"
-    )
-    # parameterId = models.ForeignKey(Parameter, on_delete=models.CASCADE)
-    # parameter_unit = models.CharField(max_length=200)
-    name = models.CharField(max_length=200, null=True)
-    details = models.TextField(max_length=1500, null=True, blank=True)
-
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class Modelvariable(models.Model):
     modelId = models.ForeignKey(
         Psychmodel, on_delete=models.CASCADE, related_name="modelvariables"
     )
-    # variableId = models.ForeignKey(Variable, on_delete=models.CASCADE)
+    variableId = models.ForeignKey(Variable, on_delete=models.CASCADE, null=True)
     # variable_value = models.FloatField()
     # variable_measurement_unit = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True)
@@ -205,6 +206,14 @@ class Modelvariable(models.Model):
         Measurementinstrument, on_delete=models.DO_NOTHING, null=True, blank=True
     )
     details = models.TextField(max_length=1500, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Behaviour(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=1500)
 
     def __str__(self):
         return self.name

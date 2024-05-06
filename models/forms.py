@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Psychmodel
+from .models import Psychmodel, Proposal, Framework
 
 
 # Create your forms here.
@@ -46,33 +46,48 @@ class ContactForm(forms.Form):
 
 class SubmitModelForm(forms.Form):
     class Meta:
-        model = Psychmodel
+        model = Proposal
         fields = [
-            "model_name",
+            "title",
             "description",
-            "co_authors",
             "publication",
-            "framework",
-            "language",
-            # "model_discipline",
-            "model_parameters",
-            "model_variables",
         ]
 
     model_name = forms.CharField(required=True)
     description = forms.CharField(widget=forms.Textarea, required=True)
-    co_authors = forms.CharField(required=False)
     publication = forms.CharField(required=False)
-    framework = forms.CharField(required=True)
-    language = forms.CharField(required=True)
-    # model_discipline = forms.CharField(required=True)
-    model_parameters = forms.CharField(required=True)
-    model_variables = forms.CharField(required=True)
+
+    def save(self, commit=True):
+        model = Proposal()
+        model.title = self.cleaned_data["model_name"]
+        model.description = self.cleaned_data["description"]
+        model.publication = self.cleaned_data["publication"]
+        if commit:
+            model.save()
+        return model
 
 
-class SearchForm(forms.Form):
-    name = forms.CharField(required=False)
-    author = forms.CharField(required=False)
-    framework = forms.CharField(required=False)
-    language = forms.CharField(required=False)
-    variables = forms.CharField(required=False)
+class PsychmodelForm(forms.ModelForm):
+    class Meta:
+        model = Psychmodel
+        fields = [
+            "model_name",
+            "description",
+            # "publication",
+            # "authors",
+            "framework",
+            "softwarepackage",
+            "language",
+        ]
+
+
+class FrameworkForm(forms.ModelForm):
+    class Meta:
+        model = Framework
+        fields = [
+            "framework_name",
+            "framework_description",
+            "parent_framework",
+            "publication",
+            "explanation",
+        ]
