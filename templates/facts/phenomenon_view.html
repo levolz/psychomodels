@@ -1,0 +1,24 @@
+{% extends 'facts.html' %}
+{% load static %}
+
+{% block title %}{{ phenomenon.name }}{% endblock %}
+{% block content %}
+    <p>{{ phenomenon.short }}</p>
+    <hr>
+    <p>{{ phenomenon.description }}</p>
+
+    {% if phenomenon.field.all %}
+    <p>Associated Fields: {% for field in phenomenon.field.all %}{{ field }}{% if not forloop.last %}; {% endif %}{% endfor %}</p>
+    {% endif %}
+
+    <h2>Constructs</h2>
+    <table>
+        {% for construct in phenomenon.constructs.all %}
+        <tr>
+            <td><a href="{% url 'construct_view' construct.id %}">{{ construct.name }}</a></td>
+        </tr>
+        {% empty %}
+        <td>No constructs are associated with this phenomenon.</td>
+        {% endfor %}
+{% endblock %}
+

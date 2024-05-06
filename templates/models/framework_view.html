@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrascripts %} 
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock %}
+
+
+{% block title %}{{object.framework_name}}{% endblock %}
+
+{% block content %}
+<p>{{object.framework_description}}</p>
+<hr>
+{% if object.parent_framework %}
+<h4>Parent Framework</h4>
+<a href="{% url 'framework_view' object.parent_framework.id %}">{{object.parent_framework}}</a>
+{% endif %}
+
+<h4>Child Frameworks</h4>
+{% if children %}
+<ul>
+    {% for framework in children %}
+    <li><a href="{% url 'frameworks' %}{{framework.id}}/">{{framework}}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No child frameworks</p>
+{% endif %}
+
+{% if object.explanation %}
+<hr>
+<h2>Explanation</h2>
+<p>{{ object.formatted_explanation|safe }} </p>
+{% endif %}
+
+
+{% endblock %}

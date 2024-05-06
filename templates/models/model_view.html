@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extrascripts %} 
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock %}
+
 {% block title %}{{object.model_name}}{% endblock %}
 
 {% block content %}
@@ -15,42 +20,22 @@
 <h4>Publication:</h4>
 <cite>{{object.publication}}<a href="{{object.publication.unique_identifier}}">{{object.publication.unique_identifier}}</a></cite>
 
-<h4>Modelling Framework:</h4>
-<p>{% for framework in object.framework.all %} 
-        {{framework}}{% if not forloop.last %}; {% endif %} 
-    {% endfor %} </p>
+<hr>
 
-<h4>Language:</h4>
-<p>{{ object.language.language_name }}</p>
+<h4>Model Details:</h4>
 
-<h4>Model parameters:</h4>
-{% if object.modelparameters.all %}
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Details</th>
-    </tr>
-    {% for parameter in object.modelparameters.all %}
-    <tr>
-        <td>{{ parameter.name }}</td>
-        <td>{{ parameter.details }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No parameters attached to the model</p>
-{% endif %}
-
-<h4>Variables:</h4>
+<em>Variables</em>
 {% if object.modelvariables.all %}
 <table>
     <tr>
-        <th>Name</th>
-        <th>Details</th>
+        <td>Sign</td>
+        <td>Name</td>
+        <td>Details</td>
     </tr>
     {% for variable in object.modelvariables.all %}
     <tr>
         <td>{{ variable.name }}</td>
+        <td>{{ variable.variableId.variable_name }}</td>
         <td>{{ variable.details }}</td>
     </tr>
     {% endfor %}
@@ -58,14 +43,32 @@
 {% else %}
 <p>No variables attached to the model</p>
 {% endif %}
+<br>
 
-<hr>
-
-{% if object.how_does_it_work %}
-<h4>How does the model work:</h4>
-<p>{{ object.how_does_it_work }}</p>
+{% if object.explanation %}
+<em>Explanation</em>
+<p>{{ object.formatted_explanation|safe }}</p>
 <hr>
 {% endif %}
+
+<h4>Modelling Framework:</h4>
+<p>{% for framework in object.framework.all %} 
+        {{framework}}{% if not forloop.last %}; {% endif %} 
+    {% endfor %} </p>
+
+<div class="wrapper">
+    <div id="textblock">
+    <h4>Language:</h4>
+    <p>{{ object.language.language_name }}</p>
+    </div>
+    <div id="textblock">
+    <h4>Software:</h4>
+    {% for p in object.softwarepackage.all %}
+    <a href="{{ p.documentation }}">{{ p.name }}</a>
+    {% endfor %}
+    </div>
+</div>
+
 
 {% if object.codeURL or object.dataURL %}
 <h4>External Repositories:</h4>
@@ -90,5 +93,6 @@
 </div>
 {% endif %}
 
+<a href="{% url 'edit_model' pk=object.id %}"><button class="btn">Edit</button></a> 
 
 {% endblock %}

@@ -1,4 +1,5 @@
 from typing import Any, Dict
+from django.db import models
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.http import HttpResponse, Http404
@@ -9,60 +10,42 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 
-from .forms import NewUserForm, SubmitModelForm, ContactForm, SearchForm
-from .models import Psychmodel, Author, Framework, Language, Modelvariable
+from .forms import NewUserForm, SubmitModelForm, ContactForm
+from .models import (
+    Psychmodel,
+    Author,
+    Framework,
+    Language,
+    Modelvariable,
+    Softwarepackage,
+)
 from .managers import PsychmodelManager
+from .filters import PsychmodelSearch, PsychmodelFilter, FrameworkSearch
+from .forms import PsychmodelForm
 
 
 class IndexView(generic.ListView):
-    template_name = "models/overview.html"
-    form_class = SearchForm
+    queryset = Psychmodel.objects.filter(reviewed=True)
+    template_name = "models/model_overview.html"
     context_object_name = "models_list"
 
     def get_queryset(self, *args, **kwargs):
-        psych_models = Psychmodel.objects.filter(reviewed=True)
-        search_form = self.form_class(self.request.GET or None)
-        if self.request.method == "GET":
-            query = Q()
+        queryset = super().get_queryset(*args, **kwargs)
 
-            if search_form.is_valid():
-                name = search_form.cleaned_data.get("name")
-                author = search_form.cleaned_data.get("author")
-                framework = search_form.cleaned_data.get("framework")
-                language = search_form.cleaned_data.get("language")
-                variables = search_form.cleaned_data.get("variables")
+        # Filter by search
+        self.searchset = PsychmodelSearch(self.request.GET, queryset=queryset)
+        queryset = self.searchset.qs
 
-                if name:
-                    query &= Q(model_name__icontains=name)
-                if author:
-                    author_query = Author.objects.filter(
-                        first_name__icontains=author
-                    ) | Author.objects.filter(last_name__icontains=author)
-                    query &= Q(publication__authors__in=author_query)
-                if framework:
-                    framework_query = Framework.objects.filter(
-                        framework_name__icontains=framework
-                    )
-                    query &= Q(framework__in=framework_query)
-                if language:
-                    language_query = Language.objects.filter(
-                        language_name__icontains=language
-                    )
-                    query &= Q(language__in=language_query)
-                if variables:
-                    variables_query = Modelvariable.objects.filter(
-                        name__icontains=variables
-                    )
-                    query &= Q(modelvariables__in=variables_query)
+        # Filter by filters
+        self.filterset = PsychmodelFilter(self.request.GET, queryset=queryset)
+        queryset = self.filterset.qs
 
-                if query:
-                    psych_models = psych_models.filter(query)
-
-        return psych_models
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = SearchForm(self.request.GET)
+        context["search_form"] = self.searchset.form
+        context["filter_form"] = self.filterset.form
         return context
 
 
@@ -72,6 +55,59 @@ class ModelView(generic.DetailView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         return super().get_context_data(**kwargs)
+
+
+def edit_model(request, pk):
+    template = loader.get_template("models/model_edit.html")
+    model = get_object_or_404(Psychmodel, pk=pk)
+    form = PsychmodelForm(instance=model)
+    if request.method == "POST":
+        form = PsychmodelForm(request.POST, instance=model)
+        if form.is_valid():
+            model = form.save()
+            messages.success(request, "Model successfuly changed.")
+        else:
+            messages.error(request, "Unsuccessful submission. Invalid information.")
+    context = {"form": form}
+    return HttpResponse(template.render(context, request))
+
+
+class Frameworks(generic.ListView):
+    queryset = Framework.objects.all()
+    template_name = "models/frameworks_overview.html"
+    context_object_name = "frameworks_list"
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        self.filterset = FrameworkSearch(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = self.filterset.form
+        return context
+
+
+class FrameworkView(generic.DetailView):
+    model = Framework
+    template_name = "models/framework_view.html"
+
+    def get_children(self):
+        return Framework.objects.filter(parent_framework=self.object)
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["children"] = self.get_children()
+        return context
+
+
+class SoftwareView(generic.DetailView):
+    model = Softwarepackage
+    template_name = "models/software.html"
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 # Create your views here.
@@ -93,43 +129,21 @@ def tutorial(request):
     return HttpResponse(template.render(context, request))
 
 
-def overview(request):
-    template = loader.get_template("models/overview.html")
-    context = {}
-    return HttpResponse(template.render(context, request))
-
-
-# def model_view(request, model_id):
-#     model = get_object_or_404(Psychmodel, pk=model_id)
-#     try:
-#         framework = model.framework_set.get(pk=request.POST["framework"])
-#     except (KeyError, Framework.DoesNotExist):
-#         return render(request, "models/model_view.html", {"model": model, "error_message": "You did not select a valid framework."})
-#     template = loader.get_template("models/model_view.html")
-#     context = {"model": model}
-#     return HttpResponse(template.render(context, request))
-
-
 def submit(request):
     context = {
         "login_form": AuthenticationForm(),
         # "register_form": NewUserForm(),
         "model_form": SubmitModelForm(),
     }
-    return render(request, "models/submit.html", context)
-
-
-def submit_anon(request):
     if request.method == "POST":
         form = SubmitModelForm(request.POST, request.FILES)
         if form.is_valid():
-            # model = form.save()
+            model = form.save()
             messages.success(request, "Model submission successful.")
             return redirect("models_index")
         messages.error(request, "Unsuccessful submission. Invalid information.")
-    form = SubmitModelForm()
-    context = {"model_form": form}
-    return render(request, "registration/submit_anon.html", context)
+
+    return render(request, "models/submit.html", context)
 
 
 def contact(request):
