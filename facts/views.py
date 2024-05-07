@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from django.views import generic
 
-from .models import Phenomenon, Construct, Pattern
+from .models import Phenomenon, Construct, Fact
 from .filters import PhenomenonSearch, PhenomenonFilter
 
 
@@ -66,19 +66,19 @@ class ConstructView(generic.DetailView):
         return context
 
 
-class PatternsView(generic.ListView):
-    model = Pattern
-    template_name = "facts/patterns.html"
-    context_object_name = "pattern_list"
+class FactsView(generic.ListView):
+    model = Fact
+    template_name = "facts/facts.html"
+    context_object_name = "facts_list"
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
         return queryset
 
 
-class PatternView(generic.DetailView):
-    model = Pattern
-    template_name = "facts/pattern_view.html"
+class FactView(generic.DetailView):
+    model = Fact
+    template_name = "facts/fact_view.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
